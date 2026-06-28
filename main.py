@@ -1,3 +1,4 @@
+
 import pygame 
 import math
 import random
@@ -6,11 +7,12 @@ FPS = 120
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((800, 600))
 red = (255,0,0)
+blue = (0,0,255)
 particles = []
 
 
 effect_rad = 100
-part_count = 500
+part_count = 250
 force_sim_speed = 0.05
 particle_rad = 5
 
@@ -21,11 +23,14 @@ def get_dist(p1,p2):
 for i in range(part_count):
     add_particle(random.randint(0,800),random.randint(0,600))
 while running:
+    mx,my = pygame.mouse.get_pos()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    for i in range(len(particles) - 1):
-        for j in range(i + 1,len(particles) - 1):
+    if pygame.mouse.get_pressed()[0]:
+        add_particle(mx,my)
+    for i in range(len(particles)):
+        for j in range(i + 1,len(particles)):
             part1 = particles[i]
             part2 = particles[j]
             dist = get_dist((part1[0],part1[1]),(part2[0],part2[1]))
@@ -56,6 +61,14 @@ while running:
     for p in particles:
         p[0] += p[2]
         p[1] += p[3]
+        if p[0] > 800:
+            p[0] = 800
+        if p[0] < 0:
+            p[0] = 0
+        if p[1] < 0:
+            p[1] = 0
+        if p[1] > 600:
+            p[1] = 600
     pygame.display.flip()
     screen.fill((0,0,0))
     for p in particles:
