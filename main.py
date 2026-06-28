@@ -10,7 +10,7 @@ particles = []
 
 
 effect_rad = 100
-part_count = 100
+part_count = 500
 force_sim_speed = 0.05
 particle_rad = 5
 
@@ -28,16 +28,31 @@ while running:
         for j in range(i + 1,len(particles) - 1):
             part1 = particles[i]
             part2 = particles[j]
-            if get_dist((part1[0],part1[1]),(part2[0],part2[1])) < effect_rad and not get_dist((part1[0],part1[1]),(part2[0],part2[1])) < particle_rad + 5:
+            dist = get_dist((part1[0],part1[1]),(part2[0],part2[1]))
+            if dist == 0:
+                continue
+            dx = part2[0] - part1[0]
+            dy = part2[1] - part1[1]
+            if dist < effect_rad and not dist < particle_rad + 10:
                 part1[2] = (part2[0] - part1[0]) * force_sim_speed
                 part1[3] = (part2[1] - part1[1]) * force_sim_speed
                 part2[2] = (part1[0] - part2[0]) * force_sim_speed
                 part2[3] = (part1[1] - part2[1]) * force_sim_speed
-            elif get_dist((part1[0],part1[1]),(part2[0],part2[1])) < effect_rad and get_dist((part1[0],part1[1]),(part2[0],part2[1])) < particle_rad + 7:
+            elif dist < effect_rad and dist < particle_rad + 10:
                 part1[2] = (part1[0] - part2[0]) * force_sim_speed
                 part1[3] = (part1[1] - part2[1]) * force_sim_speed
                 part2[2] = (part2[0] - part1[0]) * force_sim_speed
                 part2[3] = (part2[1] - part1[1]) * force_sim_speed
+                min_dist = particle_rad * 2
+                if dist < min_dist:
+                    overlap = min_dist - dist
+                    push_x = (dx / dist) * overlap * 0.5
+                    push_y = (dy / dist) * overlap * 0.5
+                    
+                    part1[0] -= push_x
+                    part1[1] -= push_y
+                    part2[0] += push_x
+                    part2[1] += push_y
     for p in particles:
         p[0] += p[2]
         p[1] += p[3]
