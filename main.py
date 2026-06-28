@@ -2,7 +2,7 @@ import pygame
 import math
 import random
 running = True
-FPS = 60
+FPS = 120
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((800, 600))
 red = (255,0,0)
@@ -43,7 +43,7 @@ while running:
                 part1[3] = (part1[1] - part2[1]) * force_sim_speed
                 part2[2] = (part2[0] - part1[0]) * force_sim_speed
                 part2[3] = (part2[1] - part1[1]) * force_sim_speed
-                min_dist = particle_rad * 2
+                min_dist = (particle_rad * 2) + 2
                 if dist < min_dist:
                     overlap = min_dist - dist
                     push_x = (dx / dist) * overlap * 0.5
